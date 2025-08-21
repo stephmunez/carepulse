@@ -42,8 +42,6 @@
 
   --font-plus-jakarta-sans: ar(--font-plus-jakarta-sans);
 
-  --breakpoint-2xl: 87.5rem; /* 1400px */
-
   --color-green-500: oklch(0.668 0.136 162.84);
   --color-green-600: oklch(0.259 0.041 165.64);
   --color-blue-500: oklch(0.753 0.101 247.2);
@@ -143,7 +141,7 @@
 }
 
 @utility container {
-  @apply w-full mx-auto px-8;
+  @apply w-full mx-auto px-8 max-w-[87.5rem];
 }
 
 @utility remove-scrollbar {
