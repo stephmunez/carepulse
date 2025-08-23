@@ -145,6 +145,8 @@
 }
 
 @utility remove-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   &::-webkit-scrollbar {
     width: 0px;
     height: 0px;
@@ -370,7 +372,7 @@
 }
 
 @utility shad-select-trigger {
-  @apply bg-dark-400!  placeholder:text-dark-600! border-dark-500! h-11! focus:ring-0! focus:ring-offset-0!;
+  @apply bg-dark-400! w-full! cursor-pointer!  placeholder:text-dark-600! border-dark-500! h-11! focus:ring-0! focus:ring-offset-0!;
 }
 
 @utility shad-select-content {
@@ -428,7 +430,7 @@
 
 /* REACT DATE PICKER OVERRIDES */
 .date-picker {
-  @apply overflow-hidden! border-transparent! w-full! placeholder:text-dark-600!  h-11! text-14-medium! rounded-md! px-3! outline-none!;
+  @apply overflow-hidden! flex! items-center! border-transparent! w-full! placeholder:text-dark-600!  h-11! text-14-medium! rounded-md! px-3! outline-none!;
 }
 
 /* KEYFRAMES */
