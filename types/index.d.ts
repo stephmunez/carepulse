@@ -1,6 +1,9 @@
 declare type SearchParamProps = {
-  params: Promise<{ [key: string]: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: { [key: string]: string };
+  searchParams: {
+    appointmentId: string;
+    [key: string]: string | string[] | undefined;
+  };
 };
 
 declare type Gender = 'male' | 'female' | 'other';
