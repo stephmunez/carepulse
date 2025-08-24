@@ -7,7 +7,7 @@ import {
   BUCKET_ID,
   DATABASE_ID,
   ENDPOINT,
-  PATIENTS_COLLECTION_ID,
+  PATIENT_COLLECTION_ID,
   PROJECT_ID,
   databases,
   storage,
@@ -74,7 +74,7 @@ export const registerPatient = async ({
     // Create new patient document -> https://appwrite.io/docs/references/cloud/server-nodejs/databases#createDocument
     const newPatient = await databases.createDocument(
       DATABASE_ID!,
-      PATIENTS_COLLECTION_ID!,
+      PATIENT_COLLECTION_ID!,
       ID.unique(),
       {
         identificationDocumentId: file?.$id ? file.$id : '',
@@ -88,5 +88,22 @@ export const registerPatient = async ({
     return parseStringify(newPatient);
   } catch (error) {
     console.error('An error occurred while creating a new patient:', error);
+  }
+};
+
+export const getPatient = async (userId: string) => {
+  try {
+    const patients = await databases.listDocuments(
+      DATABASE_ID!,
+      PATIENT_COLLECTION_ID!,
+      [Query.equal('userId', [userId])]
+    );
+
+    return parseStringify(patients.documents[0]);
+  } catch (error) {
+    console.error(
+      'An error occurred while retrieving the patient details:',
+      error
+    );
   }
 };
