@@ -2,13 +2,16 @@
 
 import { SelectItem } from '@/components/ui/select';
 import { Doctors } from '@/constants';
-import { createAppointment } from '@/lib/actions/appointment.actions';
+import {
+  createAppointment,
+  updateAppointment,
+} from '@/lib/actions/appointment.actions';
 import { getAppointmentSchema } from '@/lib/validation';
 import { Appointment } from '@/types/appwrite.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -21,11 +24,13 @@ export const AppointmentForm = ({
   patientId,
   type = 'create',
   appointment,
+  setOpen,
 }: {
   userId: string;
   patientId: string;
   type: 'create' | 'schedule' | 'cancel';
   appointment?: Appointment;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +41,9 @@ export const AppointmentForm = ({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
       primaryPhysician: appointment ? appointment?.primaryPhysician : '',
-      schedule: new Date(appointment?.schedule ?? Date.now()),
+      schedule: appointment
+        ? new Date(appointment?.schedule)
+        : new Date(Date.now()),
       reason: appointment ? appointment.reason : '',
       note: appointment?.note || '',
       cancellationReason: appointment?.cancellationReason || '',
@@ -79,6 +86,25 @@ export const AppointmentForm = ({
           router.push(
             `/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.$id}`
           );
+        }
+      } else {
+        const appointmentToUpdate = {
+          userId,
+          appointmentId: appointment?.$id ?? '',
+          appointment: {
+            primaryPhysician: values.primaryPhysician,
+            schedule: new Date(values.schedule),
+            status: status as Status,
+            cancellationReason: values.cancellationReason,
+          },
+          type,
+        };
+
+        const updatedAppointment = await updateAppointment(appointmentToUpdate);
+
+        if (updatedAppointment) {
+          setOpen && setOpen(false);
+          form.reset();
         }
       }
     } catch (error) {
