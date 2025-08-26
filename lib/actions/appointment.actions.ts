@@ -111,3 +111,29 @@ export const getRecentAppointmentList = async () => {
     );
   }
 };
+
+export const updateAppointment = async ({
+  appointmentId,
+  userId,
+  appointment,
+  type,
+}: UpdateAppointmentParams) => {
+  try {
+    // Update appointment to scheduled -> https://appwrite.io/docs/references/cloud/server-nodejs/databases#updateDocument
+    const updatedAppointment = await databases.updateDocument(
+      DATABASE_ID!,
+      APPOINTMENT_COLLECTION_ID!,
+      appointmentId,
+      appointment
+    );
+
+    if (!updatedAppointment) throw Error('Appointment not found');
+
+    // TODO: SMS notification
+
+    revalidatePath('/admin');
+    return parseStringify(updatedAppointment);
+  } catch (error) {
+    console.error('An error occurred while scheduling an appointment:', error);
+  }
+};
